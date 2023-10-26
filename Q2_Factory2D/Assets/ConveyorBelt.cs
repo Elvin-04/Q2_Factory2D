@@ -4,6 +4,25 @@ public class ConveyorBelt : MonoBehaviour
 {
     [SerializeField] private string direction;
 
+    private void Start()
+    {
+        switch (direction)
+        {
+            case "left":
+                transform.rotation = Quaternion.Euler(0,0, 90);
+                break;
+            case "right":
+                transform.rotation = Quaternion.Euler(0, 0, -90);
+                break;
+            case "top":
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+                break;
+            case "down":
+                transform.rotation = Quaternion.Euler(0, 0, 180);
+                break;
+        }
+    }
+
     private void Update()
     {
         Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position, Vector2.zero, 0);
