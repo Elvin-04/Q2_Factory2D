@@ -6,7 +6,7 @@ public class ConveyorBelt : MonoBehaviour
 
     private void Start()
     {
-        SetDirection();
+        //SetDirection();
     }
 
     private void Update()

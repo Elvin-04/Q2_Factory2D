@@ -6,12 +6,16 @@ public class GameManager : MonoBehaviour
     public static GameManager instance { get; private set; }
 
     [SerializeField] Tilemap map;
-    [SerializeField] private GameObject higlighted;
 
     private Camera mainCamera;
+    private float rotation = 0;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject conveyorBeltPrefab;
+
+    [Header("Preview")]
+    [SerializeField] private GameObject higlighted;
+    [SerializeField] private GameObject previewConveyorBelt;
 
     private void Awake()
     {
@@ -26,12 +30,23 @@ public class GameManager : MonoBehaviour
 
         if(map.GetTile(gridPosition) != null)
         {
-            higlighted.SetActive(true);
-            higlighted.transform.position = new Vector2(gridPosition.x + 0.5f, gridPosition.y + 0.5f);
+            if(SelectionManager.instance.actualSelected == "Conveyor Belt")
+            {
+                previewConveyorBelt.SetActive(true);
+                previewConveyorBelt.transform.position = new Vector2(gridPosition.x + 0.5f, gridPosition.y + 0.5f);
+                previewConveyorBelt.transform.rotation = Quaternion.Euler(0, 0, rotation);
+            }
+            else
+            {
+                higlighted.SetActive(true);
+                higlighted.transform.position = new Vector2(gridPosition.x + 0.5f, gridPosition.y + 0.5f);
+            }
+            
         }
         else
         {
             higlighted.SetActive(false);
+            previewConveyorBelt.SetActive(false);
         }
     }
 
@@ -39,7 +54,22 @@ public class GameManager : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0))
         {
-            PlaceConveyorBelt();
+            if(SelectionManager.instance.actualSelected == "Conveyor Belt") {
+                PlaceConveyorBelt();
+            }
+            
+            //SelectionManager.instance.SetActualSelected(100);
+           
+            higlighted.SetActive(false);
+            previewConveyorBelt.SetActive(false);
+            rotation = 0;
+        }
+
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            rotation -= 90;
+            if (rotation < -270)
+                rotation = 0;
         }
     }
 
@@ -56,6 +86,7 @@ public class GameManager : MonoBehaviour
 
             GameObject conveyorBelt = Instantiate(conveyorBeltPrefab);
             conveyorBelt.transform.position = new Vector2(positionToSpawn.x + 0.5f, positionToSpawn.y + 0.5f);
+            conveyorBelt.transform.rotation = Quaternion.Euler(0, 0, rotation);
         }
     }
 }
