@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
 
     private Camera mainCamera;
 
+    [Header("Prefabs")]
+    [SerializeField] private GameObject conveyorBeltPrefab;
+
     private void Awake()
     {
         instance = this;
@@ -42,16 +45,17 @@ public class GameManager : MonoBehaviour
 
     public void PlaceConveyorBelt()
     {
-        Vector2 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int gridPosition = map.WorldToCell(mousePosition);
+        Vector3Int gridPosition = map.WorldToCell(Input.mousePosition);
 
-        Ray ray = mainCamera.ScreenPointToRay(mousePosition);
-
+        Ray ray = mainCamera.ScreenPointToRay(gridPosition);
         RaycastHit2D hit2D = Physics2D.GetRayIntersection(ray);
-
-        if (hit2D.collider != null)
+        if (hit2D.collider != null && hit2D.collider.tag == "Floor")
         {
-            Debug.Log(hit2D.collider.name);
+            Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector3Int positionToSpawn = map.WorldToCell(mousePos);
+
+            GameObject conveyorBelt = Instantiate(conveyorBeltPrefab);
+            conveyorBelt.transform.position = new Vector2(positionToSpawn.x + 0.5f, positionToSpawn.y + 0.5f);
         }
     }
 }
