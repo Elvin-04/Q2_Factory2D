@@ -2,25 +2,11 @@ using UnityEngine;
 
 public class ConveyorBelt : MonoBehaviour
 {
-    [SerializeField] private string direction;
+    public string direction;
 
     private void Start()
     {
-        switch (direction)
-        {
-            case "left":
-                transform.rotation = Quaternion.Euler(0,0, 90);
-                break;
-            case "right":
-                transform.rotation = Quaternion.Euler(0, 0, -90);
-                break;
-            case "top":
-                transform.rotation = Quaternion.Euler(0, 0, 0);
-                break;
-            case "down":
-                transform.rotation = Quaternion.Euler(0, 0, 180);
-                break;
-        }
+        SetDirection();
     }
 
     private void Update()
@@ -56,5 +42,24 @@ public class ConveyorBelt : MonoBehaviour
             }
         }
         
+    }
+
+    public void SetDirection()
+    {
+        switch (direction)
+        {
+            case "left":
+                transform.rotation = Quaternion.Euler(0, 0, 90);
+                break;
+            case "right":
+                transform.rotation = Quaternion.Euler(0, 0, -90);
+                break;
+            case "top":
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+                break;
+            case "down":
+                transform.rotation = Quaternion.Euler(0, 0, 180);
+                break;
+        }
     }
 }

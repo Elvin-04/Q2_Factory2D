@@ -1,9 +1,8 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Quartz : MonoBehaviour
 {
-    public Vector2 destination;
+    [HideInInspector] public Vector2 destination;
 
     public float speed;
     public bool isMoving = false;
