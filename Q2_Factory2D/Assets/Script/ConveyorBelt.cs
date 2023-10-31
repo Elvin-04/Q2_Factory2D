@@ -3,10 +3,11 @@ using UnityEngine;
 public class ConveyorBelt : MonoBehaviour
 {
     public string direction;
+    public float speed = 1f;
 
     private void Start()
     {
-        //SetDirection();
+        SetDirection();
     }
 
     private void Update()
@@ -40,25 +41,26 @@ public class ConveyorBelt : MonoBehaviour
                     collider.gameObject.GetComponent<Quartz>().destination = new Vector2(transform.position.x, transform.position.y - 1);
                     break;
             }
+            collider.gameObject.GetComponent<Quartz>().speed = speed;
         }
         
     }
 
     public void SetDirection()
     {
-        switch (direction)
+        switch (GameManager.instance.rotation)
         {
-            case "left":
-                transform.rotation = Quaternion.Euler(0, 0, 90);
+            case -90:
+                direction = "right";
                 break;
-            case "right":
-                transform.rotation = Quaternion.Euler(0, 0, -90);
+            case -270:
+                direction = "left";
                 break;
-            case "top":
-                transform.rotation = Quaternion.Euler(0, 0, 0);
+            case 0:
+                direction = "top";
                 break;
-            case "down":
-                transform.rotation = Quaternion.Euler(0, 0, 180);
+            case -180:
+                direction = "down";
                 break;
         }
     }

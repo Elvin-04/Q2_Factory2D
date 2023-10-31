@@ -7,6 +7,13 @@ public class Quartz : MonoBehaviour
     public float speed;
     public bool isMoving = false;
 
+    Camera mainCam;
+
+    private void Awake()
+    {
+        mainCam = Camera.main;
+    }
+
     private void Update()
     {
         if(destination != null && destination != Vector2.zero)
@@ -23,5 +30,6 @@ public class Quartz : MonoBehaviour
             }
         }
     }
+
 
 }

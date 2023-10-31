@@ -16,16 +16,27 @@ public class SelectionManager : MonoBehaviour
 
     public void SetActualSelected(int id)
     {
-        switch (id)
+        if(!TimeManager.instance.gameStarted)
         {
-            case 0:
-                actualSelected = "Conveyor Belt";
-                break;
-            default:
-                actualSelected = "";
-                break;
+            switch (id)
+            {
+                case 0:
+                    actualSelected = "Conveyor Belt";
+                    break;
+                case 1:
+                    actualSelected = "Piston";
+                    break;
+                default:
+                    actualSelected = "";
+                    break;
+            }
+            actualSelectedtext.text = actualSelected;
         }
-        actualSelectedtext.text = actualSelected;
+    }
 
+    public void Unselect()
+    {
+        actualSelected = "";
+        actualSelectedtext.text = actualSelected;
     }
 }
