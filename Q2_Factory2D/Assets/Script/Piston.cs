@@ -5,13 +5,15 @@ using UnityEngine.PlayerLoop;
 
 public class Piston : MonoBehaviour
 {
-    public float timeBetweendPistonAction = 1f;
     public float speed = 5f;
     public string direction;
+    public int priority = 1;
 
     private Animation anim;
 
     bool pistonStarted = false;
+
+    [SerializeField] private Transform detectionZone;
 
     private void Start()
     {
@@ -34,53 +36,36 @@ public class Piston : MonoBehaviour
 
     IEnumerator PistonAction()
     {
-        if(TimeManager.instance.gameStarted)
+        bool done = false;
+        if (TimeManager.instance.gameStarted)
         {
-            anim.Play();
-            Collider2D[] colliders = { };
-            switch(direction)
-            {
-                case "left":
-                    colliders = Physics2D.OverlapBoxAll(transform.position + new Vector3(-1, 0), new Vector2(0.5f, 0.5f), 0);
-                    break;
-                case "right":
-                    colliders = Physics2D.OverlapBoxAll(transform.position + new Vector3(1, 0), new Vector2(0.5f, 0.5f), 0);
-                    break;
-                case "top":
-                    colliders = Physics2D.OverlapBoxAll(transform.position + new Vector3(0, 1), new Vector2(0.5f, 0.5f), 0);
-                    break;
-                case "down":
-                    colliders = Physics2D.OverlapBoxAll(transform.position + new Vector3(0, -1), new Vector2(0.5f, 0.5f), 0);
-                    break;
-            }
-
+            Collider2D[] colliders = Physics2D.OverlapBoxAll(detectionZone.position, new Vector2(0.5f, 0.5f), 0);
+           
             foreach(Collider2D collider in colliders)
             {
-                if(collider.tag == "Material")
+                if(collider.tag == "Material" && priority >= collider.GetComponent<Quartz>().actualPriority)
                 {
+                    done = true;
                     switch (direction)
                     {
                         case "left":
-                            collider.gameObject.GetComponent<Quartz>().destination = transform.position + new Vector3(-2, 0);
+                            collider.gameObject.GetComponent<Quartz>().destination = detectionZone.position + new Vector3(-1, 0);
                             break;
                         case "right":
-                            collider.gameObject.GetComponent<Quartz>().destination = transform.position + new Vector3(2, 0);
+                            collider.gameObject.GetComponent<Quartz>().destination = detectionZone.position + new Vector3(1, 0);
                             break;
                         case "top":
-                            collider.gameObject.GetComponent<Quartz>().destination = transform.position + new Vector3(0, 2);
+                            collider.gameObject.GetComponent<Quartz>().destination = detectionZone.position + new Vector3(0, 1);
                             break;
                         case "down":
-                            collider.gameObject.GetComponent<Quartz>().destination = transform.position + new Vector3(0, -2);
+                            collider.gameObject.GetComponent<Quartz>().destination = detectionZone.position + new Vector3(0, -1);
                             break;
                     }
-
-                    collider.gameObject.GetComponent<Quartz>().speed = speed;
                 }
             }
-
-            
         }
-        yield return new WaitForSeconds(timeBetweendPistonAction);
+        yield return new WaitForSeconds(TickManager.instance.tickrate);
+        if(done) anim.Play();
         StartCoroutine(PistonAction());
     }
 

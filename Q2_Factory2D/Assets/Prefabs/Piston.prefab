@@ -121,6 +121,7 @@ Transform:
   m_Children:
   - {fileID: 5640693701942572637}
   - {fileID: 655050443705364140}
+  - {fileID: 8039168669154394155}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6357283397437229436
@@ -189,9 +190,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82fa2cfc4749dbf4ea60b95d14ba0148, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeBetweendPistonAction: 1
   speed: 8
   direction: left
+  detectionZone: {fileID: 8039168669154394155}
 --- !u!111 &460927197525811116
 Animation:
   m_ObjectHideFlags: 0
@@ -255,6 +256,37 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.2335504, y: 1.6376288}
   m_EdgeRadius: 0
+--- !u!1 &5862539829154030465
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8039168669154394155}
+  m_Layer: 0
+  m_Name: DetetctionZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8039168669154394155
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5862539829154030465}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.6, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9186295462478641364}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7682691321388253809
 GameObject:
   m_ObjectHideFlags: 0

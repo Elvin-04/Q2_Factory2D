@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,10 +25,28 @@ public class GameManager : MonoBehaviour
     [Header("Materials")]
     public List<GameObject> allMaterials;
 
+    [Header("UI")]
+    [SerializeField] private GameObject helpPannel;
+    [SerializeField] private TextMeshProUGUI conveyorBeltLimitText;
+    [SerializeField] private TextMeshProUGUI pistonLimitText;
+
+    [Header("Game")]
+    public int conveyorBeltLimit;
+    public int pistonLimit;
+    int coveyorBeltPlaced;
+    int pistonPlaced;
+
     private void Awake()
     {
         instance = this;
         mainCamera = Camera.main;
+    }
+
+    private void Start()
+    {
+        coveyorBeltPlaced = conveyorBeltLimit;
+        pistonPlaced = pistonLimit;
+        SetTextPlacedElement();
     }
 
     private void FixedUpdate()
@@ -80,7 +99,7 @@ public class GameManager : MonoBehaviour
             {
                 rotation = 0;
             }
-           
+            SetTextPlacedElement();
             higlighted.SetActive(false);
             previewConveyorBelt.SetActive(false);
         }
@@ -111,7 +130,7 @@ public class GameManager : MonoBehaviour
 
         Ray ray = mainCamera.ScreenPointToRay(gridPosition);
         RaycastHit2D hit2D = Physics2D.GetRayIntersection(ray);
-        if (hit2D.collider != null && hit2D.collider.tag == "Floor")
+        if (hit2D.collider != null && hit2D.collider.tag == "Floor" && coveyorBeltPlaced > 0)
         {
             Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int positionToSpawn = map.WorldToCell(mousePos);
@@ -119,7 +138,10 @@ public class GameManager : MonoBehaviour
             GameObject conveyorBelt = Instantiate(conveyorBeltPrefab);
             conveyorBelt.transform.position = new Vector2(positionToSpawn.x + 0.5f, positionToSpawn.y + 0.5f);
             conveyorBelt.transform.rotation = Quaternion.Euler(0, 0, rotation);
-            
+
+            coveyorBeltPlaced--;
+
+
         }
     }
 
@@ -129,7 +151,7 @@ public class GameManager : MonoBehaviour
 
         Ray ray = mainCamera.ScreenPointToRay(gridPosition);
         RaycastHit2D hit2D = Physics2D.GetRayIntersection(ray);
-        if (hit2D.collider != null && hit2D.collider.tag == "Floor")
+        if (hit2D.collider != null && hit2D.collider.tag == "Floor" && pistonPlaced > 0)
         {
             Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int positionToSpawn = map.WorldToCell(mousePos);
@@ -138,7 +160,15 @@ public class GameManager : MonoBehaviour
             piston.transform.position = new Vector2(positionToSpawn.x + 0.5f, positionToSpawn.y + 0.5f);
             piston.transform.rotation = Quaternion.Euler(0, 0, rotation);
 
+            pistonPlaced--;
+
         }
+    }
+
+    private void SetTextPlacedElement()
+    {
+        conveyorBeltLimitText.text = coveyorBeltPlaced.ToString();
+        pistonLimitText.text = pistonPlaced.ToString();
     }
 
     private void RemoveElement()
@@ -159,6 +189,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(material);
         }
+        allMaterials.Clear();
     }
 
 
@@ -166,5 +197,20 @@ public class GameManager : MonoBehaviour
     {
         Scene actualLoadedScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(actualLoadedScene.name);
+    }
+
+    public void OpenHelpPannel()
+    {
+        helpPannel.SetActive(true);
+    }
+
+    public void CloseHelpPannel()
+    {
+        helpPannel.SetActive(false);
+    }
+
+    public void BackMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }

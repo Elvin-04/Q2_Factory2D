@@ -15,6 +15,7 @@ public class TimeManager : MonoBehaviour
     public void PlayGame()
     {
         gameStarted = true;
+        TickManager.instance.StartTickRate();
         StartCoroutine(spawner.SpawnMaterial());
         SelectionManager.instance.Unselect();
     }

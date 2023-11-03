@@ -1,11 +1,15 @@
+using System.Collections;
 using UnityEngine;
 
 public class Quartz : MonoBehaviour
 {
-    [HideInInspector] public Vector2 destination;
+    public Vector2 destination;
 
     public float speed;
     public bool isMoving = false;
+
+    public int actualPriority = 0;
+
 
     Camera mainCam;
 
@@ -14,21 +18,28 @@ public class Quartz : MonoBehaviour
         mainCam = Camera.main;
     }
 
-    private void Update()
+    public void Tick()
     {
-        if(destination != null && destination != Vector2.zero)
+        actualPriority = 0;
+        if (destination != Vector2.zero)
         {
-            if (Vector2.Distance(transform.position, destination) >= 0.01f)
-            {
-                isMoving = true;
-                transform.position = Vector2.MoveTowards(transform.position, destination, speed * Time.deltaTime);
-            }
-            else
-            {
-                isMoving = false;
-                destination = Vector2.zero;
-            }
+            StartCoroutine(MoveQuartz(destination));
         }
+    }
+
+    IEnumerator MoveQuartz(Vector2 targetPosition)
+    {
+        Vector3 startposition = transform.position;
+        float timeElapsed = 0;
+
+        while(timeElapsed < TickManager.instance.tickrate)
+        {
+            transform.position = Vector2.Lerp(startposition, targetPosition, timeElapsed / TickManager.instance.tickrate);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPosition;
     }
 
 

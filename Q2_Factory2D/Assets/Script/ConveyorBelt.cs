@@ -1,30 +1,35 @@
+using System.Collections;
 using UnityEngine;
 
 public class ConveyorBelt : MonoBehaviour
 {
     public string direction;
     public float speed = 1f;
+    public int priority = 0;
+
+    bool conveyorStarted = false;
 
     private void Start()
     {
         SetDirection();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position, Vector2.zero, 0);
-        foreach (Collider2D collider in colliders)
+        if (TimeManager.instance.gameStarted && !conveyorStarted)
         {
-            if(collider.gameObject.tag == "Material")
-            {
-                SetDestination(collider);
-            }
+            conveyorStarted = true;
+            StartCoroutine(ConveyorBeltAction());
+        }
+        else if (!TimeManager.instance.gameStarted && conveyorStarted)
+        {
+            conveyorStarted = false;
         }
     }
 
     private void SetDestination(Collider2D collider)
     {
-        if(!collider.gameObject.GetComponent<Quartz>().isMoving)
+        if(!collider.gameObject.GetComponent<Quartz>().isMoving && priority >= collider.GetComponent<Quartz>().actualPriority)
         {
             switch (direction)
             {
@@ -63,5 +68,22 @@ public class ConveyorBelt : MonoBehaviour
                 direction = "down";
                 break;
         }
+    }
+
+    IEnumerator ConveyorBeltAction()
+    {
+        if(TimeManager.instance.gameStarted)
+        {
+            Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position, Vector2.zero, 0);
+            foreach (Collider2D collider in colliders)
+            {
+                if (collider.gameObject.tag == "Material")
+                {
+                    SetDestination(collider);
+                }
+            }
+        }
+        yield return new WaitForSeconds(TickManager.instance.tickrate);
+        StartCoroutine(ConveyorBeltAction());
     }
 }
